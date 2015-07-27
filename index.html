@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script>
+function validId() {
+    var x = document.forms["login"]["id"].value;
+    //alert (x.match(/^\d{8}$/));
+    //return false;
+    //alert(x);
+    if (x.match(/^\d{8}$/) == null) {
+        alert("非法的学号");
+        return false;
+    }
+    return true;
+}
+</script>
+
+</head>
+
+<form name="login" action="table.php" onsubmit="return validId();" method="post">
+    <label for="id">学号</label>
+    <input name="id" type="text" maxlength="8" size="8">
+    <input type="submit" value="登录">
+</form>
+
+</html>
