@@ -51,6 +51,7 @@ try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $conn->exec("set names utf8;");//set the MySQL connecting encoding
+    $conn->exec("delete from lib where id = '" . $_POST['id'] . "';");
     $conn->exec($sql);
     echo "提交成功!";
 } 
