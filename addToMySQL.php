@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-</head>
-<body>
 <?php
-
 test_input($_POST["id"]);
 test_input($_POST["name"]);
 if (strlen($_POST["id"]) != 8 || !is_numeric($_POST["id"]))
@@ -23,10 +16,10 @@ $items = array(
     "Thur_m1", "Thur_m2", "Thur_a1", "Thur_a2", "Thur_e",
     "Fri_m1", "Fri_m2", "Fri_a1", "Fri_a2", "Fri_e",
     "Sat_m", "Sat_a", "Sat_e",
-    "Sun_m", "Sun_a", "Sun_e"
+    "Sun_m", "Sun_a", "Sun_e", "extra"
 );
 foreach ($items as $item) {
-    if ($_POST[$item] == NULL) $_POST[$item] = "0";
+    if ($_POST[$item] == NULL && $item != "extra") $_POST[$item] = "0";
 }
 
 //construct the MySQL insert command $sql
@@ -57,7 +50,7 @@ try {
 } 
 catch (PDOException $e) {
     echo "提交失败!<br>";
-    echo $e->getMessage();
+    //echo $e->getMessage();
 }
 
 function test_input($data) {
@@ -67,5 +60,3 @@ function test_input($data) {
     return $data;
 }
 ?>
-</body>
-</html>

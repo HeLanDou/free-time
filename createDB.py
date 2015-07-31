@@ -44,6 +44,7 @@ Sat_e bool,
 Sun_m bool,
 Sun_a bool,
 Sun_e bool,
+extra varchar(100),
 primary key(id) );''')
 
 cursor.close()

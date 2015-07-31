@@ -2,6 +2,16 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("button").click(function() {
+        $.post("addToMySQL.php", $("form").serializeArray(), function(result) {
+            alert(result);
+        });
+    });
+});
+</script>
 </head>
 
 
@@ -48,7 +58,8 @@ function ischecked($time) {
 }
 
 ?>
-<form action="addToMySQL.php" method="post">
+<!form action="addToMySQL.php" method="post">
+<form>
     <label for="name">姓名</label>
     <input type="text" name="name" value="<?php echo $result['name']; ?>" required>
     <label for="id">学号</label>
@@ -126,8 +137,8 @@ function ischecked($time) {
     <input type="text" name="extra" maxlength=30 size=90>
     <br>
     <br>
-    <input type="submit" value="提交">
 
 </form>
+    <button id="submit" type="button">提交</button>
 </body>
 </html>
