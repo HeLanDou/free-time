@@ -1,27 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<script>
-function validId() {
-    var x = document.forms["login"]["id"].value;
-    //alert (x.match(/^\d{8}$/));
-    //return false;
-    //alert(x);
-    if (x.match(/^\d{8}$/) == null) {
-        alert("非法的学号");
-        return false;
-    }
-    return true;
-}
-</script>
-
+<title>空闲时间表管理</title>
+<link href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<form name="login" action="table.php" onsubmit="return validId();" method="post">
-    <label for="id">学号</label>
-    <input name="id" type="text" maxlength="8" size="8">
-    <input type="submit" value="登录">
-</form>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+      <form style="margin-top:40px;" role="form" name="login" action="table.php" onsubmit="return validId();" method="post">
+        <label class="sr-only" for="id">学号</label>
+        <div class="input-group">
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-user"></span>
+          </span>
+          <input class="form-control" name="id" type="text" maxlength="8" size="8" placeholder="学号" required>
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+              登录 <span class="glyphicon glyphicon-log-in"></span>
+            </button>
+          </span>
+        </div>
+        <div id="idAlert" class="alert alert-danger alert-dismissable hidden">
+          <button id="closeAlert" type="button" class="close" aria-hidden="true">&times;</button>
+          输入学号有误
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script>
+$("#closeAlert").click(function () {
+  $("#idAlert").addClass("hidden");
+});
+function validId() {
+  var x = document.forms["login"]["id"].value;
+  if (x.match(/^\d{8}$/) == null) {
+    $("#idAlert").removeClass("hidden");
+    return false;
+  }
+  return true;
+}
+</script>
 </html>

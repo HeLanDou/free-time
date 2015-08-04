@@ -2,7 +2,7 @@
 test_input($_POST["id"]);
 test_input($_POST["name"]);
 if (strlen($_POST["id"]) != 8 || !is_numeric($_POST["id"]))
-    exit("提交失败,请检查输入的学号!");
+    exit($_POST['id'] . "提交失败,请检查输入的学号!");
 
 $servername = "localhost";
 $username = "root";
@@ -19,7 +19,9 @@ $items = array(
     "Sun_m", "Sun_a", "Sun_e", "extra"
 );
 foreach ($items as $item) {
-    if ($_POST[$item] == NULL && $item != "extra") $_POST[$item] = "0";
+    if ($_POST[$item] == NULL)
+        if ($item == "extra") $_POST[$item] = "";
+        else $_POST[$item] = "0";
 }
 
 //construct the MySQL insert command $sql
@@ -32,8 +34,8 @@ $sql .= ") values(";
 foreach ($items as $item) {
     if ($item == "id")
         $sql .= "\"" . $_POST["id"] . "\"";
-    elseif ($item == "name")
-        $sql .= ", \"" . $_POST["name"] . "\"";
+    elseif ($item == "name" || $item == "extra")
+        $sql .= ", \"" . $_POST[$item] . "\"";
     else $sql .= ", " . $_POST[$item];
 }
 $sql .= ");";
@@ -46,10 +48,11 @@ try {
     $conn->exec("set names utf8;");//set the MySQL connecting encoding
     $conn->exec("delete from lib where id = '" . $_POST['id'] . "';");
     $conn->exec($sql);
+    //echo $_POST['id'] . $_POST['name'];
     echo "提交成功!";
 } 
 catch (PDOException $e) {
-    echo "提交失败!<br>";
+    echo "提交失败!";
     //echo $e->getMessage();
 }
 
