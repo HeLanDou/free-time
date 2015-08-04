@@ -20,7 +20,7 @@ $items = array(
 );
 foreach ($items as $item) {
     if ($_POST[$item] == NULL)
-        if ($item == "extra") $_POST[$item] = "";
+        if ($item == "extra" || $item == 'name') $_POST[$item] = "";
         else $_POST[$item] = "0";
 }
 

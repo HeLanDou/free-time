@@ -60,7 +60,7 @@ function ischecked($time) {
         </div>
         <div class="form-group">
           <label for="name">姓名</label>
-          <input class="form-control" id="name" type="text" name="name" placeholder="请输入你的姓名" value="<?php echo $result['name']; ?>" required>
+          <input class="form-control" id="name" type="text" name="name" placeholder="请输入你的姓名" <?php echo 'value="'. $result['name'] . '"'; ?> required>
         </div>
         <table class="table table-bordered" style="text-align:center">
           <thead>
@@ -84,8 +84,8 @@ function ischecked($time) {
             <td><input type="checkbox" name="Wed_m1" value="1" <?php ischecked('Wed_m1') ?>></td>
             <td><input type="checkbox" name="Thur_m1" value="1" <?php ischecked('Thur_m1') ?>></td>
             <td><input type="checkbox" name="Fri_m1" value="1" <?php ischecked('Fri_m1') ?>></td>
-            <td rowspan="2"><input type="checkbox" name="Sat_m" value="1" <?php ischecked('Sat_m1') ?>></td>
-            <td rowspan="2"><input type="checkbox" name="Sun_m" value="1" <?php ischecked('Sun_m1') ?>></td>
+            <td rowspan="2"><input type="checkbox" name="Sat_m" value="1" <?php ischecked('Sat_m') ?>></td>
+            <td rowspan="2"><input type="checkbox" name="Sun_m" value="1" <?php ischecked('Sun_m') ?>></td>
           </tr>
 
           <tr>
@@ -104,8 +104,8 @@ function ischecked($time) {
             <td><input type="checkbox" name="Wed_a1" value="1" <?php ischecked('Wed_a1') ?>></td>
             <td><input type="checkbox" name="Thur_a1" value="1" <?php ischecked('Thur_a1') ?>></td>
             <td><input type="checkbox" name="Fri_a1" value="1" <?php ischecked('Fri_a1') ?>></td>
-            <td rowspan="2"><input type="checkbox" name="Sat_a" value="1" <?php ischecked('Sat_a1') ?>></td>
-            <td rowspan="2"><input type="checkbox" name="Sun_a" value="1" <?php ischecked('Sun_a1') ?>></td>
+            <td rowspan="2"><input type="checkbox" name="Sat_a" value="1" <?php ischecked('Sat_a') ?>></td>
+            <td rowspan="2"><input type="checkbox" name="Sun_a" value="1" <?php ischecked('Sun_a') ?>></td>
           </tr>
 
           <tr>
@@ -114,7 +114,7 @@ function ischecked($time) {
             <td><input type="checkbox" name="Tue_a2" value="1" <?php ischecked('Tue_a2') ?>></td>
             <td><input type="checkbox" name="Wed_a2" value="1" <?php ischecked('Wed_a2') ?>></td>
             <td><input type="checkbox" name="Thur_a2" value="1" <?php ischecked('Thur_a2') ?>></td>
-            <td><input type="checkbox" name="Fri_a2" value="1" <?php ischecked('Sat_a2') ?>></td>
+            <td><input type="checkbox" name="Fri_a2" value="1" <?php ischecked('Fri_a2') ?>></td>
           </tr>
 
           <tr>
@@ -144,6 +144,11 @@ function ischecked($time) {
 <script>
 $(document).ready(function() {
   $("#submit").click(function() {
+    //alert($("#name").val());
+    if ($("#name").val() == '') {
+      alert("请输入姓名!");
+      return;
+    }
     $.post("addToMySQL.php", $("form").serialize(), function(result) {
       alert(result);
     });
