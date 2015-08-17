@@ -138,6 +138,14 @@ function ischecked($time) {
       </form>
     </div>
   </div>
+  <div class="row" style="margin-top:20px;">
+    <div class="col-xs-12">
+      <footer class="text-center text-muted">
+        <p><small>copyright &copy; 2015 Rui Chen</small></p>
+        <p><small>Contact me: chenr48@mail2.sysu.edu.cn</small></p>
+      </footer>
+    </div>
+  </div>
 </div>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/bootstrap.min.js"></script>
