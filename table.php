@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>空闲时间表</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
 <meta charset="UTF-8">
 <link href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 </head>
