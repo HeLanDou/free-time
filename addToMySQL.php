@@ -53,7 +53,7 @@ try {
 } 
 catch (PDOException $e) {
     echo "提交失败!";
-    //echo $e->getMessage();
+    echo $e->getMessage();
 }
 
 function test_input($data) {
