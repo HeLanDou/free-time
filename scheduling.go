@@ -5,45 +5,74 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"sort"
 )
 
 const (
 	TotalSecsion = 31
+	//TotalHours   = 76.5
 	//MinWorkHours = 40
-	//MaxWorkHours = 100 //50
+	MaxWorkHours = 20 //50
 	//MinPerson    = 6
-	MaxPerson = 8
+	//MaxPerson = 6
 )
 
 type Person struct {
-	id, name  string
-	workHours int
-	iffree    [TotalSecsion]bool
+	id, name       string
+	workHours      float64
+	availableHours float64
+	iffree         [TotalSecsion]bool
 }
 
 var (
 	TotalPerson int
-	Hours       = [31]int{
-		2, 2, 2, 2, 4,
-		2, 2, 2, 2, 4,
-		2, 2, 2, 2, 4,
-		2, 2, 2, 2, 4,
-		2, 2, 2, 2, 4,
-		4, 4, 4,
-		4, 4, 4}
+	Hours       = [31]float64{
+		2, 2, 2, 2, 3.5,
+		2, 2, 2, 2, 3.5,
+		2, 2, 2, 2, 3.5,
+		2, 2, 2, 2, 3.5,
+		2, 2, 2, 2, 3.5,
+		3, 3, 3.5,
+		3, 3, 3.5}
+	// MaxPerson = [31]int{
+	// 	6, 6, 6, 6, 6,
+	// 	6, 6, 6, 6, 6,
+	// 	6, 6, 6, 6, 6,
+	// 	6, 6, 6, 6, 6,
+	// 	6, 6, 6, 6, 6,
+	// 	6, 6, 6,
+	// 	6, 6, 6}
+	MaxPerson = [31]int{
+		8, 8, 8, 8, 7,
+		8, 8, 8, 8, 7,
+		8, 8, 8, 8, 7,
+		8, 8, 8, 8, 7,
+		8, 8, 8, 8, 7,
+		6, 6, 6,
+		6, 6, 6}
 )
 
-// type ByWorkHours []Person
+type ByPriority []Person
 
-// func (p ByWorkHours) Len() int           { return len(p) }
-// func (p ByWorkHours) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
-// func (p ByWorkHours) Less(i, j int) bool { return p[i].workHours < p[j].workHours }
+func (p ByPriority) Len() int      { return len(p) }
+func (p ByPriority) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+func (p ByPriority) Less(i, j int) bool {
+	return p[i].workHours+p[i].availableHours <
+		p[j].workHours+p[j].availableHours
+}
+
+type ById []string
+
+func (p ById) Len() int           { return len(p) }
+func (p ById) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p ById) Less(i, j int) bool { return p[i] < p[j] }
 
 func main() {
 	persons := ReadSQL()
 	TotalPerson = len(persons)
+	//schedule :=
+	//GetSchedule(persons)
 	Printss(persons)
-	//schedule := GetSchedule(persons)
 	// for _, p := range persons {
 	// 	fmt.Println(p.name, ": ", p.workHours)
 	// }
@@ -78,23 +107,25 @@ func ReadSQL() []Person {
 		scanArgs[i] = &values[i]
 	}
 
-	persons := make([]Person, 0, MaxPerson)
+	persons := make([]Person, 0, TotalPerson)
 	for rows.Next() {
 		err = rows.Scan(scanArgs...)
 		CheckError(err)
 
 		person := Person{workHours: 0}
 		person.id, person.name = string(values[0]), string(values[1])
-		//fmt.Print(person.id, " " , person.name, " ")
+		//fmt.Print(person.id, " ", person.name, " ")
 		for i, col := range values[2:33] {
 			if string(col) == "1" {
 				person.iffree[i] = true
+				person.availableHours += Hours[i]
 				//fmt.Print(i, " ")
 			} else {
 				person.iffree[i] = false
 			}
 			//fmt.Println(i, ": ", person.iffree[i])
 		}
+		//fmt.Println(person.name, person.availableHours)
 		persons = append(persons, person)
 		//fmt.Print("\n")
 	}
@@ -110,23 +141,19 @@ func CheckError(err error) {
 func GetSchedule(persons []Person) [][]string {
 	schedule := make([][]string, 0, TotalSecsion)
 	for i := 0; i < TotalSecsion; i++ {
-		secsion := make([]string, 0, MaxPerson)
-		for h := 0; h < TotalPerson; {
+		secsion := make([]string, 0, MaxPerson[i])
+		for h := 0; h < TotalPerson; h++ {
 			person := persons[h]
 			if person.iffree[i] {
-				secsion = append(secsion, person.id)
-				persons[h].workHours += Hours[i]
 				persons[h].iffree[i] = false
-				for k := h; k+1 < TotalPerson && persons[k].workHours > persons[k+1].workHours; k++ {
-					persons[k], persons[k+1] = persons[k+1], persons[k]
+				persons[h].availableHours -= Hours[i]
+				if len(secsion) < MaxPerson[i] && person.workHours+Hours[i] <= MaxWorkHours {
+					secsion = append(secsion, person.id+" "+person.name)
+					persons[h].workHours += Hours[i]
 				}
-				if len(secsion) == MaxPerson {
-					break
-				}
-			} else {
-				h++
 			}
 		}
+		sort.Sort(ByPriority(persons))
 		schedule = append(schedule, secsion)
 	}
 	return schedule
@@ -134,14 +161,16 @@ func GetSchedule(persons []Person) [][]string {
 
 func PrintSchedule(schedule [][]string, persons []Person) {
 	for i, section := range schedule {
-		fmt.Print(i, " ")
+		sort.Sort(ById(section))
+		// fmt.Print(i, " ")
+		fmt.Println(i)
 		for _, name := range section {
-			fmt.Print(name, " ")
+			fmt.Println(name[9:len(name)], " ")
 		}
 		fmt.Print("\n")
-		if i < 25 && i%5 == 4 || i == 27 || i == 30 {
-			fmt.Println("--------------------------------------------------------------")
-		}
+		// if i < 25 && i%5 == 4 || i == 27 || i == 30 {
+		// 	fmt.Println("--------------------------------------------------------------")
+		// }
 	}
 	for _, person := range persons {
 		fmt.Println(person.id, person.name, ":", person.workHours, "hours")
