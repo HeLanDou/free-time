@@ -70,13 +70,12 @@ func (p ById) Less(i, j int) bool { return p[i] < p[j] }
 func main() {
 	persons := ReadSQL()
 	TotalPerson = len(persons)
-	//schedule :=
-	//GetSchedule(persons)
-	Printss(persons)
+	schedule := GetSchedule(persons)
+	//Printss(persons)
 	// for _, p := range persons {
 	// 	fmt.Println(p.name, ": ", p.workHours)
 	// }
-	//PrintSchedule(schedule, persons)
+	PrintSchedule(schedule, persons)
 }
 
 func Printss(persons []Person) {
